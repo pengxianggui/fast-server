@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
 import com.gitee.sunchenbin.mybatis.actable.annotation.TableComment;
+import com.gitee.sunchenbin.mybatis.actable.annotation.Unique;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ import lombok.Data;
 @TableComment("权限表")
 @Data
 public class Auth extends BaseEntity {
+    @Unique
     @TableField
     @Column(type = MySqlTypeConstant.VARCHAR, length = 50, comment = "权限编码", isNull = false)
     private String code;
@@ -26,4 +28,7 @@ public class Auth extends BaseEntity {
     @TableField
     @Column(type = MySqlTypeConstant.VARCHAR, length = 300, comment = "权限描述")
     private String description;
+    @TableField
+    @Column(type = MySqlTypeConstant.BIGINT, comment = "模块ID")
+    private Long moduleId;
 }

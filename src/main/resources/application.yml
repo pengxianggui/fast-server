@@ -16,6 +16,10 @@ spring:
     username: ${DB_USER:root}
     password: ${DB_PASS:123456}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:/schema.sql
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
