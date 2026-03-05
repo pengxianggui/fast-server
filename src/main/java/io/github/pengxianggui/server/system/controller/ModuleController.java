@@ -1,6 +1,7 @@
 package io.github.pengxianggui.server.system.controller;
 
 import cn.hutool.core.lang.tree.Tree;
+import io.github.pengxianggui.server.common.SysConstant;
 import io.github.pengxianggui.server.system.service.ModuleService;
 import io.github.pengxianggui.server.system.model.entity.Module;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ public class ModuleController extends BaseController<Module> {
      *
      * @param moduleId    以此为根节点。默认为0(系统根模块节点id固定为0)
      * @param includeSelf 是否包含根节点自身(默认true)
+     * @param includeAuth 模块树是否挂上权限节点(默认false)
      * @return
      */
     @GetMapping("tree")
-    public List<Tree<Long>> getModuleTree(@RequestParam(defaultValue = "0") Long moduleId,
-                                          @RequestParam(defaultValue = "true") Boolean includeSelf) {
-        return moduleService.getModuleTree(moduleId, includeSelf);
+    public List<Tree<Long>> getModuleTree(@RequestParam(defaultValue = SysConstant.SYS_ROOT_MODULE_ID_AS_STR) Long moduleId,
+                                          @RequestParam(defaultValue = "true") Boolean includeSelf,
+                                          @RequestParam(defaultValue = "false") Boolean includeAuth) {
+        return moduleService.getModuleTree(moduleId, includeSelf, includeAuth);
     }
 }

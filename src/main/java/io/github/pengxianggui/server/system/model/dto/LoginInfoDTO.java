@@ -1,4 +1,4 @@
-package io.github.pengxianggui.server.system.model.vo;
+package io.github.pengxianggui.server.system.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.Set;
  */
 @Data
 @Builder
-public class LoginInfoVO {
+public class LoginInfoDTO {
     private Long id;
     private String username;
     private Set<String> roles;

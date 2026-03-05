@@ -11,8 +11,8 @@ import io.github.pengxianggui.server.system.model.dto.LoginRequest;
 import io.github.pengxianggui.server.system.model.entity.Auth;
 import io.github.pengxianggui.server.system.model.entity.Role;
 import io.github.pengxianggui.server.system.model.entity.User;
-import io.github.pengxianggui.server.system.model.vo.LoginResultVO;
-import io.github.pengxianggui.server.system.model.vo.LoginInfoVO;
+import io.github.pengxianggui.server.system.model.dto.LoginResultDTO;
+import io.github.pengxianggui.server.system.model.dto.LoginInfoDTO;
 import io.github.pengxianggui.server.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,7 +46,7 @@ public class LoginController {
      * @return
      */
     @PostMapping("/login")
-    public LoginResultVO login(@Validated @RequestBody LoginRequest req) {
+    public LoginResultDTO login(@Validated @RequestBody LoginRequest req) {
         User user = userService.getByUsername(req.getUsername());
         Assert.isTrue(user != null, () -> new BizException("用户名或密码错误",
                 new UsernameNotFoundException(StrUtil.format("用户名不存在:{}", req.getUsername()))));
@@ -54,9 +54,9 @@ public class LoginController {
         List<Role> roles = userService.getRolesOfUser(user.getId());
         List<Auth> auths = userService.getAuthsOfUser(user.getId());
         String token = JwtUtils.createToken(user.getId(), req.getUsername());
-        return new LoginResultVO(
+        return new LoginResultDTO(
                 token,
-                LoginInfoVO.builder()
+                LoginInfoDTO.builder()
                         .id(user.getId())
                         .username(req.getUsername())
                         .roles(roles.stream().map(Role::getCode).collect(Collectors.toSet()))
@@ -71,9 +71,9 @@ public class LoginController {
      * @return
      */
     @GetMapping("/info")
-    public LoginInfoVO userInfo() {
+    public LoginInfoDTO userInfo() {
         LoginUser loginUser = SecurityUtil.getLoginUser();
-        return LoginInfoVO.builder()
+        return LoginInfoDTO.builder()
                 .id(loginUser.getId())
                 .username(loginUser.getUsername())
                 .roles(loginUser.getRoles())

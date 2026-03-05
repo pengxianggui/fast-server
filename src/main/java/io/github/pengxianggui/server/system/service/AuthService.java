@@ -6,7 +6,11 @@ import io.github.pengxianggui.crud.query.PagerView;
 import io.github.pengxianggui.server.system.model.entity.Auth;
 import io.github.pengxianggui.server.system.model.vo.AuthPageVO;
 
+import java.util.List;
+
 public interface AuthService extends BaseService<Auth> {
 
     PagerView<AuthPageVO> getPageVO(PagerQuery query);
+
+    List<Auth> getAuthsOfRole(Long roleId);
 }

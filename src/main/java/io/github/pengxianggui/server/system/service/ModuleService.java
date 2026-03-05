@@ -13,9 +13,10 @@ public interface ModuleService extends BaseService<Module> {
      *
      * @param moduleId    模块ID
      * @param includeSelf 是否包含moduleId自己，若包括, 则返回的是一棵树, 否则可能是moduleId下的多棵子树
+     * @param includeAuth 模块树上是否挂权限节点
      * @return
      */
-    List<Tree<Long>> getModuleTree(Long moduleId, boolean includeSelf);
+    List<Tree<Long>> getModuleTree(Long moduleId, boolean includeSelf, boolean includeAuth);
 
     List<Module> getByParentId(Long parentId);
 

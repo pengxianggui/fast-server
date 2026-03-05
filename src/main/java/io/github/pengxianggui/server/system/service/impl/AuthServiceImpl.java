@@ -7,13 +7,16 @@ import io.github.pengxianggui.crud.BaseServiceImpl;
 import io.github.pengxianggui.crud.join.MPJLambdaWrapperBuilder;
 import io.github.pengxianggui.crud.query.PagerQuery;
 import io.github.pengxianggui.crud.query.PagerView;
+import io.github.pengxianggui.server.system.mapper.RoleAuthRelMapper;
 import io.github.pengxianggui.server.system.model.entity.Auth;
 import io.github.pengxianggui.server.system.mapper.AuthMapper;
 import io.github.pengxianggui.server.system.model.entity.Module;
+import io.github.pengxianggui.server.system.model.entity.RoleAuthRel;
 import io.github.pengxianggui.server.system.model.vo.AuthPageVO;
 import io.github.pengxianggui.server.system.service.AuthService;
 import io.github.pengxianggui.server.system.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +25,11 @@ import java.util.stream.Collectors;
 @Service
 public class AuthServiceImpl extends BaseServiceImpl<AuthMapper, Auth> implements AuthService {
 
+    @Lazy
     @Autowired
     private ModuleService moduleService;
+    @Autowired
+    private RoleAuthRelMapper roleAuthRelMapper;
 
     @Override
     public PagerView<AuthPageVO> getPageVO(PagerQuery query) {
@@ -38,5 +44,14 @@ public class AuthServiceImpl extends BaseServiceImpl<AuthMapper, Auth> implement
                 modules.stream().map(Module::getId).collect(Collectors.toSet()));
         Page<AuthPageVO> page = baseMapper.selectJoinPage(pager, AuthPageVO.class, wrapper);
         return PagerView.of(page);
+    }
+
+    @Override
+    public List<Auth> getAuthsOfRole(Long roleId) {
+        return roleAuthRelMapper.selectJoinList(Auth.class,
+                new MPJLambdaWrapper<RoleAuthRel>()
+                        .selectAll(Auth.class)
+                        .leftJoin(Auth.class, Auth::getId, RoleAuthRel::getAuthId)
+                        .eq(RoleAuthRel::getRoleId, roleId));
     }
 }
