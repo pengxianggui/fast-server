@@ -1,5 +1,6 @@
 package io.github.pengxianggui.server.common.res;
 
+import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,11 +26,11 @@ public class HttpResult<T> {
     }
 
     public static <T> HttpResult<T> success(T data) {
-        return new HttpResult<>(0, "成功", data);
+        return new HttpResult<>(0, I18nUtil.get("common.success"), data);
     }
 
     public static HttpResult fail() {
-        return HttpResult.fail("失败");
+        return HttpResult.fail(I18nUtil.get("common.fail"));
     }
 
     public static HttpResult fail(String msg) {

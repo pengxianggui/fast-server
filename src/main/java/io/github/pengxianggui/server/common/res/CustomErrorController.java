@@ -1,5 +1,6 @@
 package io.github.pengxianggui.server.common.res;
 
+import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +31,13 @@ public class CustomErrorController implements ErrorController {
 
         // 2. 根据状态码返回友好的提示
         if (code == HttpStatus.NOT_FOUND.value()) {
-            return HttpResult.fail(404, "您访问的资源不存在");
+            return HttpResult.fail(404, I18nUtil.get("error.resource_not_found"));
         } else if (code == HttpStatus.FORBIDDEN.value()) {
-            return HttpResult.fail(403, "拒绝访问");
+            return HttpResult.fail(403, I18nUtil.get("error.forbidden"));
         } else if (code == HttpStatus.UNAUTHORIZED.value()) {
-            return HttpResult.fail(401, "未授权，请先登录");
+            return HttpResult.fail(401, I18nUtil.get("error.unauthorized"));
         }
 
-        return HttpResult.fail(code, "系统异常，请稍后再试");
+        return HttpResult.fail(code, I18nUtil.get("common.system_error"));
     }
 }

@@ -3,6 +3,7 @@ package io.github.pengxianggui.server.auth;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import io.github.pengxianggui.server.common.ex.BizException;
+import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import io.github.pengxianggui.server.system.model.entity.Auth;
 import io.github.pengxianggui.server.system.model.entity.Role;
 import io.github.pengxianggui.server.system.model.entity.User;
@@ -49,8 +50,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (JwtUtils.verify(token)) {
                 String username = JwtUtils.getUsername(token);
                 User user = userService.getByUsername(username);
-                Assert.isTrue(user != null, () -> new BizException("登录凭据已失效",
-                        new UsernameNotFoundException(StrUtil.format("用户不存在:{}", username))));
+                Assert.isTrue(user != null, () -> new BizException(I18nUtil.get("auth.credential_expired"),
+                        new UsernameNotFoundException(I18nUtil.get("auth.username_not_found", username))));
                 List<Role> roles = userService.getRolesOfUser(user.getId());
                 List<Auth> auths = userService.getAuthsOfUser(user.getId());
                 LoginUser loginUser = new LoginUser(user, roles, auths);

@@ -1,6 +1,7 @@
 package io.github.pengxianggui.server.auth;
 
 import cn.hutool.json.JSONUtil;
+import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import io.github.pengxianggui.server.common.res.HttpResult;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -24,12 +25,12 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        renderJson(response, HttpResult.fail(401, "认证失败，请先登录", authException));
+        renderJson(response, HttpResult.fail(401, I18nUtil.get("security.auth_required"), authException));
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        renderJson(response, HttpResult.fail(403, "抱歉，您没有权限操作此功能", accessDeniedException));
+        renderJson(response, HttpResult.fail(403, I18nUtil.get("security.access_denied"), accessDeniedException));
     }
 
     private void renderJson(HttpServletResponse response, HttpResult result) throws IOException {
