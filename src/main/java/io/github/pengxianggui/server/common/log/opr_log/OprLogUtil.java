@@ -7,6 +7,7 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import io.github.pengxianggui.server.auth.LoginUser;
 import io.github.pengxianggui.server.auth.SecurityUtil;
+import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import io.github.pengxianggui.server.system.model.entity.OprLog;
 import io.github.pengxianggui.server.system.service.OprLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class OprLogUtil {
      */
     public void recordBizLog(String code, String desc, String param) {
         if (StrUtil.isBlank(code) || StrUtil.isNullOrUndefined(code)) {
-            throw new IllegalArgumentException("业务唯一编码值为空:" + code);
+            throw new IllegalArgumentException(I18nUtil.get("opr_log.biz_code_required", code));
         }
         OprLog bizLog = new OprLog();
         bizLog.setCode(code);

@@ -1,5 +1,6 @@
 package io.github.pengxianggui.server.common.res;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.pengxianggui.server.common.ex.BizException;
 import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler {
     public HttpResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldError() == null
                 ? I18nUtil.get("common.fail")
-                : e.getBindingResult().getFieldError().getDefaultMessage();
+                : resolveValidationMessage(e.getBindingResult().getFieldError().getDefaultMessage());
         return HttpResult.fail(400, message, e);
     }
 
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
     public HttpResult handleBindException(BindException e) {
         String message = e.getFieldError() == null
                 ? I18nUtil.get("common.fail")
-                : e.getFieldError().getDefaultMessage();
+                : resolveValidationMessage(e.getFieldError().getDefaultMessage());
         return HttpResult.fail(400, message, e);
     }
 
@@ -61,5 +62,16 @@ public class GlobalExceptionHandler {
     public HttpResult handleException(Exception e) {
         log.error(I18nUtil.get("common.server_error"), e);
         return HttpResult.fail(I18nUtil.get("common.server_error"), e);
+    }
+
+    private String resolveValidationMessage(String message) {
+        if (StrUtil.isBlank(message)) {
+            return I18nUtil.get("common.fail");
+        }
+        if (message.startsWith("{") && message.endsWith("}") && message.length() > 2) {
+            String key = message.substring(1, message.length() - 1);
+            return I18nUtil.get(key);
+        }
+        return message;
     }
 }

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.github.pengxianggui.crud.BaseServiceImpl;
 import io.github.pengxianggui.server.common.ex.BizException;
+import io.github.pengxianggui.server.common.i18n.I18nUtil;
 import io.github.pengxianggui.server.system.model.dto.AuthTreeNodeDTO;
 import io.github.pengxianggui.server.system.model.entity.Module;
 import io.github.pengxianggui.server.system.mapper.ModuleMapper;
@@ -31,7 +32,7 @@ public class ModuleServiceImpl extends BaseServiceImpl<ModuleMapper, Module> imp
         Long rootId = moduleId;
         if (includeSelf) {
             TreeNode<Long> root = nodes.stream().filter(m -> m.getId().equals(moduleId))
-                    .findFirst().orElseThrow(() -> new BizException("模块不存在:{}", moduleId));
+                    .findFirst().orElseThrow(() -> new BizException(I18nUtil.get("module.not_found", moduleId)));
             rootId = root.getParentId();
             nodes.add(root);
         }
