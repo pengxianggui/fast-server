@@ -26,11 +26,11 @@ public class UserController extends BaseController<User> {
     /**
      * 获取用户拥有的角色列表
      *
-     * @param userId 用户ID
+     * @param id 用户ID
      * @return
      */
     @GetMapping("/{id}/roles")
-    public List<Role> getRoles(@PathVariable Long userId) {
-        return userService.getRolesOfUser(userId);
+    public List<Role> getRoles(@PathVariable Long id) {
+        return userService.getRolesOfUser(id);
     }
 }
