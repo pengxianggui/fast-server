@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/login", "/user/captcha", "/error", "/public/**").permitAll() // 登录、验证码接口开放, /public/前缀的开放
+                .antMatchers("/user/login", "/user/captcha", "/error", "/pub/**").permitAll() // 登录、验证码接口开放, /pub/前缀的开放
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

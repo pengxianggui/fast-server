@@ -20,16 +20,12 @@ import java.util.Locale;
 @Configuration
 public class I18nConfig {
 
-    @Bean(name = "messageSource")
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:i18n/messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setFallbackToSystemLocale(false);
-        messageSource.setUseCodeAsDefaultMessage(true);
-        return messageSource;
-    }
-
+    /**
+     * 支持类似 @NotBlank(message = "{user.name.empty}")
+     *
+     * @param messageSource
+     * @return
+     */
     @Bean
     public LocalValidatorFactoryBean validator(MessageSource messageSource) {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
@@ -37,11 +33,16 @@ public class I18nConfig {
         return validator;
     }
 
+    /**
+     * 限定支持的语言。AcceptHeaderLocaleResolver将依赖请求头Accept-Language值，利用权重匹配locale。
+     *
+     * @return
+     */
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
-        resolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
-        resolver.setSupportedLocales(Arrays.asList(Locale.SIMPLIFIED_CHINESE, Locale.US));
+        resolver.setDefaultLocale(Locale.CHINESE);
+        resolver.setSupportedLocales(Arrays.asList(Locale.CHINESE, Locale.ENGLISH));
         return resolver;
     }
 }

@@ -1,6 +1,7 @@
 package io.github.pengxianggui.server.system.controller;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import io.github.pengxianggui.server.auth.JwtUtils;
 import io.github.pengxianggui.server.auth.LoginUser;
@@ -48,9 +49,9 @@ public class LoginController {
     @PostMapping("/login")
     public LoginResultDTO login(@Validated @RequestBody LoginRequest req) {
         User user = userService.getByUsername(req.getUsername());
-        Assert.isTrue(user != null, () -> new BizException(I18nUtil.get("auth.invalid_credentials"),
-                new UsernameNotFoundException(I18nUtil.get("auth.username_not_found", req.getUsername()))));
-        Assert.isTrue(BCrypt.checkpw(req.getPassword(), user.getPassword()), I18nUtil.get("auth.invalid_password"));
+        Assert.isTrue(user != null, () -> new BizException(I18nUtil.get("auth.username_not_found", req.getUsername())));
+        Assert.isTrue(StrUtil.isNotBlank(user.getPassword()) && BCrypt.checkpw(req.getPassword(), user.getPassword()),
+                () -> new BizException(I18nUtil.get("auth.invalid_password")));
         List<Role> roles = userService.getRolesOfUser(user.getId());
         List<Auth> auths = userService.getAuthsOfUser(user.getId());
         String token = JwtUtils.createToken(user.getId(), req.getUsername());
