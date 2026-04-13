@@ -91,3 +91,7 @@ INSERT INTO `user` (`username`, `password`, `phone`, `nick_name`, `real_name`, `
 VALUES ('admin', '$2a$10$qlGjF1aazBNI8s/SIkY7i.z5elQ9YHX088.kvGTPSlicq1Eogxp/G', '', '管理员', '管理员', NULL, NULL, 1,
         1, '管理员', NOW(), 1, '管理员', NOW(), 0);
 COMMIT;
+
+BEGIN;
+INSERT INTO `user_role_rel` (`user_id`, `role_id`, `create_by`, `create_name`, `create_time`, `update_by`, `update_name`, `update_time`, `deleted`) VALUES (1, 1, 1, 'admin', NOW(), 1, 'admin', NOW(), 0);
+COMMIT;

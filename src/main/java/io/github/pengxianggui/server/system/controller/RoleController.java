@@ -27,6 +27,16 @@ public class RoleController extends BaseController<Role> {
     }
 
     /**
+     * 获取所有角色
+     *
+     * @return
+     */
+    @GetMapping("/list")
+    public List<Role> list() {
+        return roleService.list();
+    }
+
+    /**
      * 获取角色拥有的权限列表
      *
      * @param id 角色ID

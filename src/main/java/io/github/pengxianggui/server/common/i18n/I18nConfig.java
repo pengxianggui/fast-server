@@ -21,6 +21,21 @@ import java.util.Locale;
 public class I18nConfig {
 
     /**
+     * 配置国际化消息源
+     *
+     * @return
+     */
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+        source.setBasenames("classpath:i18n/messages");
+        source.setDefaultEncoding("UTF-8");
+        source.setFallbackToSystemLocale(false);
+        source.setUseCodeAsDefaultMessage(true);
+        return source;
+    }
+
+    /**
      * 支持类似 @NotBlank(message = "{user.name.empty}")
      *
      * @param messageSource
@@ -41,8 +56,8 @@ public class I18nConfig {
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
-        resolver.setDefaultLocale(Locale.CHINESE);
-        resolver.setSupportedLocales(Arrays.asList(Locale.CHINESE, Locale.ENGLISH));
+        resolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
+        resolver.setSupportedLocales(Arrays.asList(Locale.SIMPLIFIED_CHINESE, Locale.ENGLISH));
         return resolver;
     }
 }
