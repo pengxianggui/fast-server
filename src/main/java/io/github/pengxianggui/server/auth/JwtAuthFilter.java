@@ -63,7 +63,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
-            log.error("解析JWT令牌时出错", e);
+            log.error("Parse JWT error", e);
             SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(request, response);

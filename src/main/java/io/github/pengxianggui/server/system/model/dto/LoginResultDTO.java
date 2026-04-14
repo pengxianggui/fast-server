@@ -1,6 +1,7 @@
 package io.github.pengxianggui.server.system.model.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 登录结果
@@ -8,6 +9,7 @@ import lombok.Data;
  * @author pengxg
  * @date 2026/2/20 22:55
  */
+@NoArgsConstructor
 @Data
 public class LoginResultDTO {
     private String token;

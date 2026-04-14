@@ -1,27 +1,15 @@
 package io.github.pengxianggui.server.system.controller;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.BCrypt;
-import io.github.pengxianggui.server.auth.JwtUtils;
 import io.github.pengxianggui.server.auth.LoginUser;
 import io.github.pengxianggui.server.auth.SecurityUtil;
 import io.github.pengxianggui.server.common.ex.BizException;
 import io.github.pengxianggui.server.common.i18n.I18nUtil;
-import io.github.pengxianggui.server.system.model.dto.LoginRequest;
-import io.github.pengxianggui.server.system.model.entity.Auth;
-import io.github.pengxianggui.server.system.model.entity.Role;
-import io.github.pengxianggui.server.system.model.entity.User;
-import io.github.pengxianggui.server.system.model.dto.LoginResultDTO;
-import io.github.pengxianggui.server.system.model.dto.LoginInfoDTO;
+import io.github.pengxianggui.server.system.model.dto.*;
 import io.github.pengxianggui.server.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 登录登出
@@ -48,22 +36,7 @@ public class LoginController {
      */
     @PostMapping("/login")
     public LoginResultDTO login(@Validated @RequestBody LoginRequest req) {
-        User user = userService.getByUsername(req.getUsername());
-        Assert.isTrue(user != null, () -> new BizException(I18nUtil.get("auth.username_not_found", req.getUsername())));
-        Assert.isTrue(StrUtil.isNotBlank(user.getPassword()) && BCrypt.checkpw(req.getPassword(), user.getPassword()),
-                () -> new BizException(I18nUtil.get("auth.invalid_password")));
-        List<Role> roles = userService.getRolesOfUser(user.getId());
-        List<Auth> auths = userService.getAuthsOfUser(user.getId());
-        String token = JwtUtils.createToken(user.getId(), req.getUsername());
-        return new LoginResultDTO(
-                token,
-                LoginInfoDTO.builder()
-                        .id(user.getId())
-                        .username(req.getUsername())
-                        .roles(roles.stream().map(Role::getCode).collect(Collectors.toSet()))
-                        .auths(auths.stream().map(Auth::getCode).collect(Collectors.toSet()))
-                        .build()
-        );
+        return userService.login(req);
     }
 
     /**
@@ -74,12 +47,30 @@ public class LoginController {
     @GetMapping("/info")
     public LoginInfoDTO userInfo() {
         LoginUser loginUser = SecurityUtil.getLoginUser();
-        return LoginInfoDTO.builder()
-                .id(loginUser.getId())
-                .username(loginUser.getUsername())
-                .roles(loginUser.getRoles())
-                .auths(loginUser.getPermissions())
-                .build();
+        Assert.isTrue(loginUser != null, () -> new BizException(I18nUtil.get("auth.credential_expired")));
+        return new LoginInfoDTO(SecurityUtil.getLoginUser());
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param id  用户id
+     * @param req 更新表单
+     */
+    @PostMapping("{id}/update")
+    public void userUpdate(@PathVariable Long id, @RequestBody UserUpdateReq req) {
+        userService.updateUser(id, req);
+    }
+
+    /**
+     * 变更密码
+     *
+     * @param id
+     * @param req
+     */
+    @PostMapping("{id}/change-password")
+    public void changePassword(@PathVariable Long id, @RequestBody ChangePasswordReq req) {
+        userService.changePassword(id, req);
     }
 
     /**
